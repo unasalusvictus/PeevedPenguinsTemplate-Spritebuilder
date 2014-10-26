@@ -10,7 +10,7 @@
 
 @implementation Penguin
 
--(id)init
+- (id)init
 {
     self = [super init];
     
