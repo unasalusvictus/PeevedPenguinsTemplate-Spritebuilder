@@ -15,6 +15,7 @@
     CCNode *_scrollNode;
     CCNode *_pullbackNode;
     CCNode *_mouseJointNode;
+    CCNode *_contentNode;
     CCPhysicsJoint *_mouseJoint;
 }
 
