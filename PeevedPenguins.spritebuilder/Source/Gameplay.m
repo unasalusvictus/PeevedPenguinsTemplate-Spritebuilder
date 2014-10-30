@@ -15,7 +15,6 @@
     CCNode *_scrollNode;
     CCNode *_pullbackNode;
     CCNode *_mouseJointNode;
-    CCNode *_contentNode;
     CCPhysicsJoint *_mouseJoint;
 }
 
@@ -34,7 +33,7 @@
 // called on every touch in this scene
 - (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
-    CGPoint touchLocation = [touch locationInNode:_contentNode];
+    CGPoint touchLocation = [touch locationInNode:_scrollNode];
     //start the catapult dragging when a touch inside of the catapult arm occurs
     if (CGRectContainsPoint([_catapultArm boundingBox], touchLocation)){
         //move the mouseJointNode to the touch position
@@ -48,7 +47,7 @@
 - (void)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event
 {
     //whenever touches move, update the postion of the mouseJointNode to the touch position
-    CGPoint touchLocation = [touch locationInNode:_contentNode];
+    CGPoint touchLocation = [touch locationInNode:_scrollNode];
     _mouseJointNode.position = touchLocation;
 }
 
