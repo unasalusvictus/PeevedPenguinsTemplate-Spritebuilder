@@ -51,7 +51,14 @@
         CGPoint penguinPosition = [_catapultArm convertToWorldSpace:ccp(34,138)];
         
         //transform the world position to the node space to which the penguin will be added (_physicsNode)
+        _currentPenguin.position = [_physicsNode convertToNodeSpace:penguinPosition];
+        //add it to the phsics world
+        [_physicsNode addChild:_currentPenguin];
+        //we don't want the penguin to rotate in the scoop
+        _currentPenguin.physicsBody.allowsRotation = false;
         
+        //create a joint to keep the penguin fixed to the scoop until the catapult is released
+        _penguinCatapultJoint = [CCPhysicsJoint connectedPivotJointWithBodyA:_currentPenguin.physicsBody bodyB:_catapultArm.physicsBody anchorA:_currentPenguin.anchorPointInPoints];
     }
 }
 
@@ -67,6 +74,16 @@
         //releases the joint and lets the catapult snap back
         [_mouseJoint invalidate];
         _mouseJoint = nil;
+        //releases the joint and lets the penguin fly
+        [_penguinCatapultJoint invalidate];
+        _penguinCatapultJoint = nil;
+        
+        //after snapping rotation is fine
+        _currentPenguin.physicsBody.allowsRotation = TRUE;
+        
+        //follow the flying penguin
+        CCActionFollow *follow = [CCActionFollow actionWithTarget:_currentPenguin worldBoundary:self.boundingBox];
+        [_scrollNode runAction:follow];
     }
 }
 
