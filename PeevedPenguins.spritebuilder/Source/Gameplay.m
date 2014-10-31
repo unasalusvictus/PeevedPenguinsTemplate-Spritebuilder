@@ -51,7 +51,7 @@
         CGPoint penguinPosition = [_catapultArm convertToWorldSpace:ccp(34,138)];
         
         //transform the world position to the node space to which the penguin will be added (_physicsNode)
-        [_p]
+        
     }
 }
 
