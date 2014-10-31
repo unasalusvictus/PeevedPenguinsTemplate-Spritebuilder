@@ -30,6 +30,7 @@
     _physicsNode.debugDraw = TRUE;
     _pullbackNode.physicsBody.collisionMask = @[];
     _mouseJointNode.physicsBody.collisionMask = @[];
+    _physicsNode.collisionDelegate = self;
 }
 
 // called on every touch in this scene
@@ -115,6 +116,11 @@
     _scrollNode.position = ccp(0,0);
     CCActionFollow *follow = [CCActionFollow actionWithTarget:penguin worldBoundary:self.boundingBox];
     [_scrollNode runAction:follow];
+}
+
+- (void)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair seal:(CCNode *)nodeA wildcard:(CCNode *)nodeB
+{
+    CCLog(@"Something collided with a seal!");
 }
 
 - (void)retry
