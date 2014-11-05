@@ -19,7 +19,10 @@
     CCPhysicsJoint *_mouseJoint;
     CCNode *_currentPenguin;
     CCPhysicsJoint *_penguinCatapultJoint;
+    ccaction *_followPenguin;
 }
+
+static const float MIN_SPEED = 5.f;
 
 // is called when CCB file has completed loading
 - (void)didLoadFromCCB {
@@ -83,8 +86,8 @@
         _currentPenguin.physicsBody.allowsRotation = TRUE;
         
         //follow the flying penguin
-        CCActionFollow *follow = [CCActionFollow actionWithTarget:_currentPenguin worldBoundary:self.boundingBox];
-        [_scrollNode runAction:follow];
+        _followPenguin = [CCActionFollow actionWithTarget:_currentPenguin worldBoundary:self.boundingBox];
+        [_scrollNode runAction:_followPenguin];
     }
 }
 
@@ -113,9 +116,9 @@
     [penguin.physicsBody applyForce:force];
     
     //ensure followed object is in visible area when starting
-    _scrollNode.position = ccp(0,0);
-    CCActionFollow *follow = [CCActionFollow actionWithTarget:penguin worldBoundary:self.boundingBox];
-    [_scrollNode runAction:follow];
+    //_scrollNode.position = ccp(0,0);
+    //CCActionFollow *follow = [CCActionFollow actionWithTarget:penguin worldBoundary:self.boundingBox];
+    //[_scrollNode runAction:follow];
 }
 
 - (void)ccPhysicsCollisionPostSolve:(CCPhysicsCollisionPair *)pair seal:(CCNode *)nodeA wildcard:(CCNode *)nodeB
@@ -144,5 +147,35 @@
     [[CCDirector sharedDirector] replaceScene: [CCBReader loadAsScene:@"Gameplay"]];
 }
 
+- (void)update:(CCTime)delta
+{
+    if (ccpLength(_currentPenguin.physicsBody.velocity) < MIN_SPEED) {
+        [self nextAttempt];
+        return;
+    }
+    
+    int xMin = _currentPenguin.boundingBox.origin.x;
+    
+    if (xMin < self.boundingBox.origin.x) {
+        [self nextAttempt];
+        return;
+    }
+    
+    int xMax = xMin + _currentPenguin.boundingBox.size.width;
+    
+    if (xMax > (self.boundingBox.origin.x + self.boundingBox.size.width)) {
+        [self nextAttempt];
+        return;
+    }
+}
+
+- (void)nextAttempt
+{
+    _currentPenguin = nil;
+    [_scrollNode stopAction:_followPenguin];
+    
+    CCActionMoveTo *actionMoveTo = [CCActionMoveTo actionWithDuration:1.f position:ccp(0,0)];
+    [_scrollNode runAction:actionMoveTo];
+}
 
 @end
