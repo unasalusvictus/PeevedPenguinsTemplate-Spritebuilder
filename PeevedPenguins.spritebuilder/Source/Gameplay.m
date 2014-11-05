@@ -19,7 +19,7 @@
     CCPhysicsJoint *_mouseJoint;
     CCNode *_currentPenguin;
     CCPhysicsJoint *_penguinCatapultJoint;
-    ccaction *_followPenguin;
+    CCAction *_followPenguin;
 }
 
 static const float MIN_SPEED = 5.f;
